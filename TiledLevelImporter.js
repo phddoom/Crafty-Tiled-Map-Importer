@@ -2,7 +2,9 @@
 
   Crafty.c("TiledLevel", {
     makeTiles: function(ts, drawType) {
-      var components, i, posx, posy, sMap, sName, tHeight, tName, tNum, tWidth, tsHeight, tsImage, tsProperties, tsWidth, xCount, yCount, _ref;
+      var components, i, posx, posy, sMap, sName, tHeight, tName, tNum, tWidth,
+      tsHeight, tsImage, tsProperties, tsWidth, xCount, yCount, _ref;
+      
       tsImage = ts.image, tNum = ts.firstgid, tsWidth = ts.imagewidth;
       tsHeight = ts.imageheight, tWidth = ts.tilewidth, tHeight = ts.tileheight;
       tsProperties = ts.tileproperties;
@@ -15,7 +17,7 @@
         sName = "tileSprite" + tNum;
         tName = "tile" + tNum;
         sMap[sName] = [posx, posy];
-        components = "2D, " + drawType + ", " + sName + ", MapTile";
+        components = ["2D", drawType, sName, "MapTile"].join(",");
         if (tsProperties) {
           if (tsProperties[tNum - 1]) {
             if (tsProperties[tNum - 1]["components"]) {
@@ -58,17 +60,10 @@
         async: false,
         success: function(level) {
           var lLayers, ts, tsImages, tss;
-          lLayers = level.layers, tss = level.tilesets;
-          drawType = drawType != null ? drawType : "Canvas";
-          tsImages = (function() {
-            var _i, _len, _results;
-            _results = [];
-            for (_i = 0, _len = tss.length; _i < _len; _i++) {
-              ts = tss[_i];
-              _results.push(ts.image);
-            }
-            return _results;
-          })();
+          lLayers = level.layers;
+          tss = level.tilesets;
+          drawType = drawType || "Canvas";
+          tsImages = _getImages(tss);
           Crafty.load(tsImages, function() {
             var layer, ts, _i, _j, _len, _len2;
             for (_i = 0, _len = tss.length; _i < _len; _i++) {
@@ -85,6 +80,14 @@
         }
       });
       return this;
+    },
+    _getImages: function(tss){
+      var i, len, results;
+      results = [];
+      for (i = 0, len = tss.length; i < len; i++) {
+        results.push(tss[i].image);
+      }
+      return results;
     },
     init: function() {
       return this;
